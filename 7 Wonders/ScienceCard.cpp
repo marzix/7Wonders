@@ -23,3 +23,8 @@ eFreebuild ScienceCard::GetFreebuildSymbol()const
 {
     return freebuild;
 }
+
+eScienceSymbol ScienceCard::GetScienceSymbol()const
+{
+    return symbol;
+}

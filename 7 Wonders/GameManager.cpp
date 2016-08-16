@@ -479,9 +479,11 @@ void GameManager::StartGame()
                 continue;
             }
         }
+        cout << "Points: " << activePlayer->GetTotalPoints();
         activePlayer = activePlayer == firstPlayer ? secondPlayer : firstPlayer;
     }
-    cout << "\n\t\t\t\tGAME OVER\n";
+    activePlayer = firstPlayer->GetTotalPoints() > secondPlayer->GetTotalPoints() ? firstPlayer : secondPlayer;
+    cout << "\n\t\t\t\tGAME OVER\n\nThe winner is " << activePlayer->GetName();
     cin.sync();
     getchar();
 }

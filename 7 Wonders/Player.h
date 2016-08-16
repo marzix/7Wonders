@@ -16,7 +16,7 @@ public:
     void AddGold( int g );
     bool CheckIfAfordable( Cost & cardCost );
     void DisplayCards();
-    int GetTotalPoints()const;
+    int GetTotalPoints();
 
 private:
     string name;

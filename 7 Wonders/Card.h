@@ -29,7 +29,12 @@ struct Cost
     {
         string cost = "|Cost:\t\t\t|\n";
         if( freebuild != EMPTY )
-            cost += "|\t" + GetFreebuildString( freebuild ) + " or\t|\n";
+        {
+            string freebuildName = GetFreebuildString( freebuild ) + " or";
+            if( freebuildName.length() < 8 )
+                freebuildName += "\t";
+            cost += "|\t" + freebuildName + "\t|\n";
+        }
         if( materials.size() == 0 )
             cost += "|\tfree\t\t|\n";
         for( auto m : materials )

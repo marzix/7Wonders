@@ -9,6 +9,7 @@ public:
     ScienceCard( eCardType type, short int epoque, Cost cost, eScienceSymbol smb, eFreebuild free );
     void DisplayCard()override;
     eFreebuild GetFreebuildSymbol()const;
+    eScienceSymbol GetScienceSymbol()const;
 
 private:
     eScienceSymbol symbol;

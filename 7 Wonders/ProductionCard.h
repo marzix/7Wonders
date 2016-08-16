@@ -11,8 +11,6 @@ public:
     SingleCost GetProducedMaterial()const;
 
 private:
-    /*eMaterial producedMaterial;
-    int amount = 0;*/
     SingleCost producedMaterial;
 };
 

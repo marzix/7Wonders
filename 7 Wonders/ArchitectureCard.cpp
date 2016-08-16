@@ -17,3 +17,8 @@ eFreebuild ArchitectureCard::GetFreebuildSymbol()const
 {
     return freebuild;
 }
+
+int ArchitectureCard::GetPoints()const
+{
+    return points;
+}

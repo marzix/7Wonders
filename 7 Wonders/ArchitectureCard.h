@@ -9,6 +9,7 @@ public:
     ArchitectureCard( eCardType type, short int epoque, Cost cost, int points, eFreebuild free );
     void DisplayCard()override;
     eFreebuild GetFreebuildSymbol()const;
+    int GetPoints()const;
 
 private:
     int points = 0;

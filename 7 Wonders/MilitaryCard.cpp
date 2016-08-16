@@ -26,3 +26,8 @@ eFreebuild MilitaryCard::GetFreebuildSymbol()const
 {
     return freebuild;
 }
+
+int MilitaryCard::GetPoints()const
+{
+    return strength;
+}

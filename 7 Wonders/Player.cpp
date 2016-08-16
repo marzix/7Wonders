@@ -3,6 +3,7 @@
 #include "ArchitectureCard.h"
 #include "ProductionCard.h"
 #include "ScienceCard.h"
+#include <algorithm>
 
 Player::Player( string _name )
 : name( _name )
@@ -118,7 +119,7 @@ void Player::DisplayCards()
     for( auto card : cards )
     {
         string displayInfo = "\t\t\t\t\t\t" + card->GetDisplayInfo();
-        for( int i = 0; i < displayInfo.length(); i++ )
+        for( unsigned i = 0; i < displayInfo.length(); i++ )
         {
             if( displayInfo[i] == '\n' )
                 displayInfo.insert( i + 1, "\t\t\t\t\t\t" );
@@ -128,11 +129,65 @@ void Player::DisplayCards()
     cout << endl;
 }
 
-int Player::GetTotalPoints()const
+struct SymbolsCounter
+{
+    SymbolsCounter( eScienceSymbol s ) : symbol(s) {};
+
+    eScienceSymbol symbol;
+    int count = 1;
+};
+
+int Player::GetTotalPoints()
 {
     //posortuj karty po typie
     //zielone: liczba kart do kwadratu
     //czerwone: si³a militarna = punkty
     //niebieskie: punkty
     //z³oto: 1pkt za ka¿de 3 monety
+
+    std::sort( cards.begin(), cards.end(), []( const CardPtr& c1, const CardPtr& c2 )->bool {
+        if( c1 && c2 )
+            return GetCardTypeString( c1->GetCardType() ) < GetCardTypeString( c2->GetCardType() );
+        else
+            return false;
+    });
+
+    int points = gold / 3;
+    vector<SymbolsCounter> greenSymbols;
+    for( auto & card : cards )
+    {
+        eCardType type = card->GetCardType();
+        if( type == BLUE )
+        {
+            if( ArchitectureCard* blue = dynamic_cast<ArchitectureCard*>( card.get() ) )
+                points += blue->GetPoints();
+        }
+        else if( type == RED )
+        {
+            if( MilitaryCard* red = dynamic_cast<MilitaryCard*>( card.get() ) )
+                points += red->GetPoints();
+        }
+        else if( type == GREEN )
+        {
+            if( ScienceCard* green = dynamic_cast<ScienceCard*>( card.get() ) )
+            {
+                bool found = false;
+                for( auto & s : greenSymbols )
+                {
+                    if( s.symbol == green->GetScienceSymbol() )
+                    {
+                        s.count++;
+                        found = true;
+                        break;
+                    }
+                }
+                if( !found )
+                    greenSymbols.push_back( SymbolsCounter( green->GetScienceSymbol() ) );
+            }
+        }
+    }
+    for( auto symbol : greenSymbols )
+        points += (int)pow( symbol.count, 2 );
+
+    return points;
 }
