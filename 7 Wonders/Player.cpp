@@ -19,10 +19,9 @@ int Player::GetGold()const
     return gold;
 }
 
-void Player::CollectCard( CardPtr card )
+void Player::CollectCard( CardPtr card, Cost costLeft )
 {
-    Cost cardCost = card->GetCost();
-    for( SingleCost sc : cardCost.materials )
+    for( SingleCost sc : costLeft.materials )
     {
         if( sc.material == GOLD && sc.amount < gold )
             gold -= sc.amount;
@@ -37,13 +36,6 @@ void Player::AddGold( int g )
 
 bool Player::CheckIfAfordable( Cost & cardCost )
 {
-    if( cardCost.materials.size() && cardCost.materials[0].material == GOLD )
-    {
-        if( gold >= cardCost.materials[0].amount )
-            cardCost.materials.erase( cardCost.materials.begin() );
-        else
-            return false;
-    }
     for( CardPtr c : cards )
     {
         if( cardCost.freebuild != EMPTY )
@@ -80,16 +72,6 @@ bool Player::CheckIfAfordable( Cost & cardCost )
             {
                 for( unsigned int i = 0; i < cardCost.materials.size(); i++ )
                 {
-                    if( cardCost.materials[i].material == GOLD )
-                    {
-                        if( gold >= cardCost.materials[i].amount )
-                        {
-                            cardCost.materials.erase( cardCost.materials.begin() + i );
-                            continue;
-                        }
-                        else
-                            return false;
-                    }
                     SingleCost sc = brown->GetProducedMaterial();
                     if( cardCost.materials[i].material == sc.material )
                     {
@@ -102,10 +84,35 @@ bool Player::CheckIfAfordable( Cost & cardCost )
             }
         }
     }
+    int goldCost = 0;
     if( cardCost.materials.empty() )
         return true;
     else
-        return false;
+    {
+        for( unsigned int i = 0; i < cardCost.materials.size(); i++ )
+        {
+            if( cardCost.materials[i].material != GOLD )
+            {
+                if( cardCost.materials[i].material == PAPYRUS || cardCost.materials[i].material == GLASS )
+                    goldCost += cardCost.materials[i].amount * 3;
+                else
+                    goldCost += cardCost.materials[i].amount * 2;
+            }
+            else
+                goldCost += cardCost.materials[i].amount;
+            cardCost.materials.erase( cardCost.materials.begin() + i );
+        }
+        if( goldCost <= gold )
+        {
+            SingleCost sc;
+            sc.amount = goldCost;
+            sc.material = GOLD;
+            cardCost.materials.push_back( sc );
+            return true;
+        }
+        else
+            return false;
+    }
 }
 
 void Player::DisplayCards()
@@ -190,4 +197,55 @@ int Player::GetTotalPoints()
         points += (int)pow( symbol.count, 2 );
 
     return points;
+}
+
+int Player::GetMilitaryStrength()
+{
+    int points = 0;
+
+    for( auto & card : cards )
+    {
+        if( card && card->GetCardType() == RED )
+        {
+            if( MilitaryCard* red = dynamic_cast<MilitaryCard*>( card.get() ) )
+                points += red->GetPoints();
+        }
+    }
+    return points;
+}
+
+void Player::SaveTurn( int epoque, vector<CardPtr> cards, unsigned points, unsigned choice )
+{
+    char buffer[10];
+    _itoa_s( epoque, buffer, 10 );
+    courseOfGameText += buffer;
+    for( auto card : cards )
+    {
+        if( CheckIfAfordable( card->GetCost() ) )
+            courseOfGameText += " " + card->GetCardCode();
+        else
+            courseOfGameText += " -1";
+    }
+    for( int i = cards.size(); i < 5; i++ )
+    {
+        courseOfGameText += " 0";
+    }
+    /*_itoa_s( points, buffer, 10 );
+    courseOfGameText += " ";
+    courseOfGameText += buffer;*/
+    courseOfGameText += "\n\n";
+
+    for( unsigned i = 0; i < 5; i++ )
+    {
+        if( i == choice )
+            courseOfGameText += "1 ";
+        else
+            courseOfGameText += "0 ";
+    }
+    courseOfGameText += "\n\n";
+}
+
+string Player::GetCourseOfGame()const
+{
+    return courseOfGameText;
 }

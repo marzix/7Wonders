@@ -1,10 +1,12 @@
 #include "MilitaryCard.h"
+//czerwona karta
 
 MilitaryCard::MilitaryCard( eCardType type, short int epoque, Cost cost, int stren, eFreebuild free )
 : Card( type, epoque, cost )
 , strength( stren )
 , freebuild( free )
 {
+    cardCode = "30";
     string fb = "\n";
     if( freebuild != EMPTY )
     {

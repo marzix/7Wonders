@@ -1,10 +1,12 @@
 #include "ArchitectureCard.h"
+//niebieska karta
 
 ArchitectureCard::ArchitectureCard( eCardType type, short int epoque, Cost cost, int p, eFreebuild free )
 : Card( type, epoque, cost )
 , points( p )
 , freebuild( free )
 {
+    cardCode = "50";
     displayString += "\n|Points: " + std::to_string( points ) + "\t\t|\n-------------------------\n";
 }
 

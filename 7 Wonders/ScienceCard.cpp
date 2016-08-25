@@ -1,10 +1,12 @@
 #include "ScienceCard.h"
+//zielona karta
 
 ScienceCard::ScienceCard( eCardType type, short int epoque, Cost cost, eScienceSymbol smb, eFreebuild free )
 : Card( type, epoque, cost )
 , symbol( smb )
 , freebuild( free )
 {
+    cardCode = "40";
     string fb = "\t|\n-------------------------\n";
     string text = GetFreebuildString( freebuild );
     if( text.length() < 8 )

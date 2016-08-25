@@ -443,7 +443,6 @@ void GameManager::StartGame()
         int result = InterpretChoice( choice );
         if( result == 0 )
             return;
-
         else if( result < 0 )
         {
             cout << "\nInvalid choice. Press Enter to continue.\n\n";
@@ -451,10 +450,10 @@ void GameManager::StartGame()
             getchar();
             continue;
         }
-        cout << "\nDo you want to sell this card for " << CARD_PRICE << " coins? (Press Y for YES or N for NO)\n";
+        /*cout << "\nDo you want to sell this card for " << CARD_PRICE << " coins? (Press Y for YES or N for NO)\n";
         cin >> choice;
         if( choice == "y" )
-            SellCard( result - 1, currentSet );
+          //SellCard( result - 1, currentSet );
         else if( choice != "n" )
         {
             cout << "\nInvalid choice. Press Enter to continue.\n\n";
@@ -462,10 +461,11 @@ void GameManager::StartGame()
             getchar();
             continue;
         }
-        else
+        else*/
         {
-            result = CollectCard( result - 1, currentSet );
-            if( result )
+            int prevPoints = activePlayer->GetTotalPoints();
+            activePlayer->SaveTurn( epoque, currentSet, prevPoints, result - 1 );
+            if( CollectCard( result - 1, currentSet ) )
             {
                 cout << "\nCard collected. Press Enter to continue.\n\n";
                 cin.sync();
@@ -473,17 +473,33 @@ void GameManager::StartGame()
             }
             else
             {
-                cout << "\nYou can't afford the card. Press Enter to continue.\n\n";
+                SellCard( result - 1, currentSet );
+                cout << "Card sold.\n\n";//"\nYou can't afford the card. Press Enter to continue.\n\n";
                 cin.sync();
                 getchar();
-                continue;
+                //continue;
             }
         }
         cout << "Points: " << activePlayer->GetTotalPoints();
         activePlayer = activePlayer == firstPlayer ? secondPlayer : firstPlayer;
     }
-    activePlayer = firstPlayer->GetTotalPoints() > secondPlayer->GetTotalPoints() ? firstPlayer : secondPlayer;
+
+    if( firstPlayer->GetTotalPoints() > secondPlayer->GetTotalPoints() )
+        activePlayer = firstPlayer;
+    else if( firstPlayer->GetTotalPoints() < secondPlayer->GetTotalPoints() )
+        activePlayer = secondPlayer;
+
+    //je¿eli remis, to decyduje przewaga militarna
+    else if( firstPlayer->GetMilitaryStrength() > secondPlayer->GetMilitaryStrength() )
+        activePlayer = firstPlayer;
+    else if( firstPlayer->GetMilitaryStrength() < secondPlayer->GetMilitaryStrength() )
+        activePlayer = secondPlayer;
+    //je¿eli dalej remis, to przewaga w z³ocie
+    else
+        activePlayer = firstPlayer->GetGold() > secondPlayer->GetGold() ? firstPlayer : secondPlayer;
+
     cout << "\n\t\t\t\tGAME OVER\n\nThe winner is " << activePlayer->GetName();
+    SaveWinnersTurns();
     cin.sync();
     getchar();
 }
@@ -512,9 +528,10 @@ bool GameManager::CollectCard( int card, vector<CardPtr> & currentSet )
 {
     if( currentSet.empty() || currentSet.size() < unsigned(card + 1) )
         return false;
-    if( activePlayer->CheckIfAfordable( currentSet[card]->GetCost() ) )
+    Cost c = currentSet[card]->GetCost();
+    if( activePlayer->CheckIfAfordable( c ) )
     {
-        activePlayer->CollectCard( currentSet[card] );
+        activePlayer->CollectCard( currentSet[card], c );
         usedCards.push_back( currentSet[card] );
         currentSet.erase( currentSet.begin() + card );
         DrawCard( currentSet );
@@ -522,4 +539,12 @@ bool GameManager::CollectCard( int card, vector<CardPtr> & currentSet )
     }
     else
         return false;
+}
+
+void GameManager::SaveWinnersTurns()
+{
+    ofstream outFile;
+    outFile.open ( filename, ios::out | ios::app );
+    outFile << activePlayer->GetCourseOfGame();
+    outFile.close();
 }

@@ -29,6 +29,8 @@ public:
     void SellCard( int card, vector<CardPtr> & currentSet );
     bool CollectCard( int card, vector<CardPtr> & currentSet );
 
+    void SaveWinnersTurns();
+
 private:
     vector<CardPtr> usedCards;
     vector<CardPtr> firstEpoqueCards;

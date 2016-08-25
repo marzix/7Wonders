@@ -59,12 +59,14 @@ public:
 
     virtual void DisplayCard() = 0;
     string GetDisplayInfo();
+    string GetCardCode()const;
 
 protected:
     eCardType type = NONE;
     Cost cost;
     short int epoque = 1;
     string displayString;
+    string cardCode;
 };
 
 #endif

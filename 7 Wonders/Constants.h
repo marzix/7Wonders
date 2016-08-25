@@ -6,7 +6,8 @@
 using namespace std;
 const int CARD_PRICE = 3;
 
-const string strFileDirectory = "../Cards.xml";
+const string strFileDirectory   = "../Cards.xml";
+const string filename           = "../train.txt";
 
 const string strCardTypeBrown     = "Brown";
 const string strCardTypeGrey      = "Grey";

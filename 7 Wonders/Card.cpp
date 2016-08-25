@@ -50,3 +50,8 @@ string Card::GetDisplayInfo()
 {
     return displayString;
 }
+
+string Card::GetCardCode()const
+{
+    return cardCode;
+}
