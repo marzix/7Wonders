@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include <fstream>
 #include <algorithm>
+#include <time.h>
 #include "ProductionCard.h"
 #include "MilitaryCard.h"
 #include "ScienceCard.h"
@@ -412,14 +413,19 @@ void GameManager::DrawCard( vector<CardPtr> & currentSet )
     }
 }
 
-void GameManager::StartGame()
+void GameManager::StartGame( char* argv[] )
 {
+    if( !argv || !*argv )
+        return;
+
+    srand( time( NULL ) );
+
     std::random_shuffle( firstEpoqueCards.begin(), firstEpoqueCards.end() );
     std::random_shuffle( secondEpoqueCards.begin(), secondEpoqueCards.end() );
     std::random_shuffle( thirdEpoqueCards.begin(), thirdEpoqueCards.end() );
 
     bool run = true;
-    Player p1 = Player( "Player 1" ), p2 = Player( "Player 2" );
+    Player p1 = Player( "Player 1", argv[1] ), p2 = Player( "Player 2", argv[2] );
     firstPlayer = make_shared<Player>( p1 );
     secondPlayer = make_shared<Player>( p2 );
     activePlayer = firstPlayer;
@@ -435,10 +441,7 @@ void GameManager::StartGame()
                 break;
             currentSet = DrawCardSet();
         }
-        cout << "\n\n\n*******************************************************************************\nEPOQUE " << epoque << "\n";
-        cout << activePlayer->GetName() + ": Pick a card.\t\t\t\tGOLD: " << activePlayer->GetGold() << "\n\n";
-        activePlayer->DisplayCards();
-        DisplayCards( currentSet );
+        DisplayData( currentSet );
         cin >> choice;
         int result = InterpretChoice( choice );
         if( result == 0 )
@@ -463,8 +466,7 @@ void GameManager::StartGame()
         }
         else*/
         {
-            int prevPoints = activePlayer->GetTotalPoints();
-            activePlayer->SaveTurn( epoque, currentSet, prevPoints, result - 1 );
+            activePlayer->SaveTurn( result - 1 );
             if( CollectCard( result - 1, currentSet ) )
             {
                 cout << "\nCard collected. Press Enter to continue.\n\n";
@@ -480,7 +482,8 @@ void GameManager::StartGame()
                 //continue;
             }
         }
-        cout << "Points: " << activePlayer->GetTotalPoints();
+        if( activePlayer->GetPlayerType() == HUMAN )
+            cout << "Points: " << activePlayer->GetTotalPoints();
         activePlayer = activePlayer == firstPlayer ? secondPlayer : firstPlayer;
     }
 
@@ -502,6 +505,23 @@ void GameManager::StartGame()
     SaveWinnersTurns();
     cin.sync();
     getchar();
+}
+
+void GameManager::DisplayData( vector<CardPtr> cards )
+{
+    if( activePlayer->GetPlayerType() == HUMAN )
+    {
+        cout << "\n\n\n*******************************************************************************\nEPOQUE " << epoque << "\n";
+        cout << activePlayer->GetName() + ": Pick a card.\t\t\t\tGOLD: " << activePlayer->GetGold() << "\n\n";
+        activePlayer->DisplayCards();
+        DisplayCards( cards );
+        activePlayer->SaveTurn( epoque, cards );
+    }
+    else
+    {
+        cout << "\n\n" << activePlayer->GetName() << endl;
+        cout << activePlayer->SaveTurn( epoque, cards );
+    }
 }
 
 int GameManager::InterpretChoice( const string choice )

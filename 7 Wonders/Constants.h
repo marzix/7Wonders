@@ -117,6 +117,11 @@ enum eBonusType {
     TAKE_BROWN_CARD
 };
 
+enum ePlayerType {
+    AI,
+    HUMAN
+};
+
 const string GetCardTypeString( eCardType type );
 eCardType GetCardTypeFromString( string name );
 const string GetMaterialString( eMaterial type );

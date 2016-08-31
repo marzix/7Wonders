@@ -5,9 +5,19 @@
 #include "ScienceCard.h"
 #include <algorithm>
 
-Player::Player( string _name )
+Player::Player( string _name, char* type )
 : name( _name )
-{}
+{
+    if( strcmp( type, "h" ) == 0 )
+        playerType = HUMAN;
+    else
+        playerType = AI;
+}
+
+void Player::SetPlayerType( ePlayerType type )
+{
+    playerType = type;
+}
 
 string Player::GetName()const
 {
@@ -17,6 +27,11 @@ string Player::GetName()const
 int Player::GetGold()const
 {
     return gold;
+}
+
+ePlayerType Player::GetPlayerType()const
+{
+    return playerType;
 }
 
 void Player::CollectCard( CardPtr card, Cost costLeft )
@@ -214,27 +229,34 @@ int Player::GetMilitaryStrength()
     return points;
 }
 
-void Player::SaveTurn( int epoque, vector<CardPtr> cards, unsigned points, unsigned choice )
+string Player::SaveTurn( int epoque, vector<CardPtr> cards )
 {
     char buffer[10];
+    string currentTurn = "";
     _itoa_s( epoque, buffer, 10 );
-    courseOfGameText += buffer;
+    currentTurn += buffer;
     for( auto card : cards )
     {
         if( CheckIfAfordable( card->GetCost() ) )
-            courseOfGameText += " " + card->GetCardCode();
+            currentTurn += " " + card->GetCardCode();
         else
-            courseOfGameText += " -1";
+            currentTurn += " -1";
     }
     for( int i = cards.size(); i < 5; i++ )
     {
-        courseOfGameText += " 0";
+        currentTurn += " 0";
     }
-    /*_itoa_s( points, buffer, 10 );
-    courseOfGameText += " ";
-    courseOfGameText += buffer;*/
-    courseOfGameText += "\n\n";
+    /*_itoa_s( GetTotalPoints(), buffer, 10 );
+    currentTurn += " ";
+    currentTurn += buffer;*/
+    currentTurn += "\n\n";
+    courseOfGameText += currentTurn;
 
+    return currentTurn;
+}
+
+void Player::SaveTurn( unsigned choice )
+{
     for( unsigned i = 0; i < 5; i++ )
     {
         if( i == choice )

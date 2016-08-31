@@ -8,8 +8,10 @@ class Player
 {
 public:
     Player() = default;
-    Player( string name );
+    Player( string name, char* type );
 
+    void SetPlayerType( ePlayerType );
+    ePlayerType GetPlayerType()const;
     string GetName()const;
     int GetGold()const;
     void CollectCard( CardPtr card, Cost costLeft );
@@ -18,7 +20,8 @@ public:
     void DisplayCards();
     int GetTotalPoints();
     int GetMilitaryStrength();
-    void SaveTurn( int epoque, vector<CardPtr> cards, unsigned points, unsigned choice );
+    string SaveTurn( int epoque, vector<CardPtr> cards );
+    void SaveTurn( unsigned choice );
     string GetCourseOfGame()const;
 
 private:
@@ -26,4 +29,5 @@ private:
     string courseOfGameText;
     vector<CardPtr> cards;
     int gold = 10;
+    ePlayerType playerType;
 };

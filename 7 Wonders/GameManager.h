@@ -22,7 +22,8 @@ public:
     void UploadWonderCards( rapidxml::xml_node<char> * node );
 
     void DisplayCards( vector<CardPtr> cards )const;
-    void StartGame();
+    void DisplayData( vector<CardPtr> cards );
+    void StartGame( char* argv[] );
     vector<CardPtr> DrawCardSet();
     void DrawCard( vector<CardPtr> & currentSet );
     int InterpretChoice( const string choice );
