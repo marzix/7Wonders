@@ -8,6 +8,7 @@ const int CARD_PRICE = 3;
 
 const string strFileDirectory   = "../Cards.xml";
 const string filename           = "../train.txt";
+const string connectionFile     = "../comunicationFile.txt";
 
 const string strCardTypeBrown     = "Brown";
 const string strCardTypeGrey      = "Grey";

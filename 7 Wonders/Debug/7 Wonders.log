@@ -1,3 +1,0 @@
-﻿  GameManager.cpp
-c:\users\marzena\documents\visual studio 2013\projects\7 wonders\7 wonders\gamemanager.cpp(421): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-  7 Wonders.vcxproj -> C:\Users\Marzena\Documents\Visual Studio 2013\Projects\7 Wonders\Debug\7 Wonders.exe

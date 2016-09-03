@@ -2,6 +2,7 @@
 #include <fstream>
 #include <algorithm>
 #include <time.h>
+#include <windows.h>
 #include "ProductionCard.h"
 #include "MilitaryCard.h"
 #include "ScienceCard.h"
@@ -442,7 +443,13 @@ void GameManager::StartGame( char* argv[] )
             currentSet = DrawCardSet();
         }
         DisplayData( currentSet );
-        cin >> choice;
+        if( activePlayer->GetPlayerType() == HUMAN )
+            cin >> choice;
+        else
+        {
+            choice = ReadAnswear();
+            cout << choice;
+        }
         int result = InterpretChoice( choice );
         if( result == 0 )
             return;
@@ -471,15 +478,16 @@ void GameManager::StartGame( char* argv[] )
             {
                 cout << "\nCard collected. Press Enter to continue.\n\n";
                 cin.sync();
-                getchar();
+                if( activePlayer->GetPlayerType() == HUMAN )
+                    getchar();
             }
             else
             {
                 SellCard( result - 1, currentSet );
-                cout << "Card sold.\n\n";//"\nYou can't afford the card. Press Enter to continue.\n\n";
+                cout << "Card sold.\n\n";
                 cin.sync();
-                getchar();
-                //continue;
+                if( activePlayer->GetPlayerType() == HUMAN )
+                    getchar();
             }
         }
         if( activePlayer->GetPlayerType() == HUMAN )
@@ -520,7 +528,9 @@ void GameManager::DisplayData( vector<CardPtr> cards )
     else
     {
         cout << "\n\n" << activePlayer->GetName() << endl;
-        cout << activePlayer->SaveTurn( epoque, cards );
+        string currentTurn =  activePlayer->SaveTurn( epoque, cards );
+        cout << currentTurn;
+        SendToFile( currentTurn );
     }
 }
 
@@ -564,7 +574,29 @@ bool GameManager::CollectCard( int card, vector<CardPtr> & currentSet )
 void GameManager::SaveWinnersTurns()
 {
     ofstream outFile;
-    outFile.open ( filename, ios::out | ios::app );
+    outFile.open( filename, ios::out | ios::app );
     outFile << activePlayer->GetCourseOfGame();
     outFile.close();
+}
+
+void GameManager::SendToFile( string data )
+{
+    ofstream connection;
+    connection.open( connectionFile, ios::out );
+    connection << ">" + data;
+    connection.close();
+}
+
+char GameManager::ReadAnswear()
+{
+    ifstream connection;
+    string answear = "";
+    while( answear.length() == 0 || answear[0] != '<' )
+    {
+        Sleep( 100 );
+        connection.open( connectionFile, ios::in );
+        connection >> answear;
+        connection.close();
+    }
+    return answear[1];
 }

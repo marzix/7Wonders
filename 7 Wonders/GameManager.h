@@ -30,6 +30,9 @@ public:
     void SellCard( int card, vector<CardPtr> & currentSet );
     bool CollectCard( int card, vector<CardPtr> & currentSet );
 
+    void SendToFile( string data );
+    char ReadAnswear();
+
     void SaveWinnersTurns();
 
 private:
