@@ -51,12 +51,15 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\7Wonders\7 Wonders\fann\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>fannfloatd.lib;fanndoubled.lib;fannfixedd.lib;fanndouble.lib;fannfixed.lib;fannfloat.lib;gtest.lib;gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -78,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIWonder.cpp" />
     <ClCompile Include="ArchitectureCard.cpp" />
     <ClCompile Include="BonusCard.cpp" />
     <ClCompile Include="Card.cpp" />
@@ -93,6 +97,7 @@
     <ClCompile Include="WonderCard.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIWonder.h" />
     <ClInclude Include="ArchitectureCard.h" />
     <ClInclude Include="BonusCard.h" />
     <ClInclude Include="Card.h" />

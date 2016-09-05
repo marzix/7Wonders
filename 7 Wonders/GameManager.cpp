@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "AIWonder.h"
 #include <fstream>
 #include <algorithm>
 #include <time.h>
@@ -447,8 +448,16 @@ void GameManager::StartGame( char* argv[] )
             cin >> choice;
         else
         {
-            choice = ReadAnswear();
-            cout << choice;
+            //choice = ReadAnswear();
+            //cout << choice;
+			string currentTurn = activePlayer->GetCurrentTurn(epoque, currentSet);
+			char  * cardsCodes = (char*)malloc(sizeof(char)*currentTurn.size());
+			for (int i = 0; i < currentTurn.size(); i++)
+			{
+				cardsCodes[i] = currentTurn[i];
+			}
+			choice = std::to_string(AIWonder::getSingleton().takeCard(cardsCodes));
+			cout << choice;
         }
         int result = InterpretChoice( choice );
         if( result == 0 )
@@ -490,7 +499,7 @@ void GameManager::StartGame( char* argv[] )
                     getchar();
             }
         }
-        if( activePlayer->GetPlayerType() == HUMAN )
+        //if( activePlayer->GetPlayerType() == HUMAN )
             cout << "Points: " << activePlayer->GetTotalPoints();
         activePlayer = activePlayer == firstPlayer ? secondPlayer : firstPlayer;
     }
@@ -509,8 +518,10 @@ void GameManager::StartGame( char* argv[] )
     else
         activePlayer = firstPlayer->GetGold() > secondPlayer->GetGold() ? firstPlayer : secondPlayer;
 
-    cout << "\n\t\t\t\tGAME OVER\n\nThe winner is " << activePlayer->GetName();
-    SaveWinnersTurns();
+    cout << "\n\t\t\t\tGAME OVER\n\nThe winner is " << activePlayer->GetName() << " points: " << activePlayer->GetTotalPoints();
+	SaveWinnersTurns();
+	activePlayer = activePlayer == firstPlayer ? secondPlayer : firstPlayer;
+	cout << "\n\t\t\t\tGAME OVER\n\nThe looser is " << activePlayer->GetName() << " points: " << activePlayer->GetTotalPoints();
     cin.sync();
     getchar();
 }
@@ -529,8 +540,10 @@ void GameManager::DisplayData( vector<CardPtr> cards )
     {
         cout << "\n\n" << activePlayer->GetName() << endl;
         string currentTurn =  activePlayer->SaveTurn( epoque, cards );
+
         cout << currentTurn;
-        SendToFile( currentTurn );
+        
+		SendToFile( currentTurn );
     }
 }
 

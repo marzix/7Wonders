@@ -231,28 +231,34 @@ int Player::GetMilitaryStrength()
 
 string Player::SaveTurn( int epoque, vector<CardPtr> cards )
 {
-    char buffer[10];
-    string currentTurn = "";
-    _itoa_s( epoque, buffer, 10 );
-    currentTurn += buffer;
-    for( auto card : cards )
-    {
-        if( CheckIfAfordable( card->GetCost() ) )
-            currentTurn += " " + card->GetCardCode();
-        else
-            currentTurn += " -1";
-    }
-    for( int i = cards.size(); i < 5; i++ )
-    {
-        currentTurn += " 0";
-    }
-    /*_itoa_s( GetTotalPoints(), buffer, 10 );
-    currentTurn += " ";
-    currentTurn += buffer;*/
-    currentTurn += "\n\n";
+	string currentTurn = GetCurrentTurn(epoque, cards);
     courseOfGameText += currentTurn;
 
     return currentTurn;
+}
+
+string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
+{
+	char buffer[10];
+	string currentTurn = "";
+	_itoa_s(epoque, buffer, 10);
+	currentTurn += buffer;
+	for (auto card : cards)
+	{
+		if (CheckIfAfordable(card->GetCost()))
+			currentTurn += " " + card->GetCardCode();
+		else
+			currentTurn += " -1";
+	}
+	for (int i = cards.size(); i < 5; i++)
+	{
+		currentTurn += " 0";
+	}
+	/*_itoa_s( GetTotalPoints(), buffer, 10 );
+	currentTurn += " ";
+	currentTurn += buffer;*/
+	currentTurn += "\n\n";
+	return currentTurn;
 }
 
 void Player::SaveTurn( unsigned choice )

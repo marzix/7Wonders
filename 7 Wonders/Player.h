@@ -23,7 +23,7 @@ public:
     string SaveTurn( int epoque, vector<CardPtr> cards );
     void SaveTurn( unsigned choice );
     string GetCourseOfGame()const;
-
+	string GetCurrentTurn(int epoque, vector<CardPtr> cards);
 private:
     string name;
     string courseOfGameText;
