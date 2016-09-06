@@ -139,14 +139,14 @@ void AIWonder::train()
 
 void AIWonder::initAI()
 {
-	/*std::ifstream netFile(netFileName);
+	std::ifstream netFile(netFileName);
 	if (netFile.good())
 	{
 		cout << "Reading neural network from file\n";
 		//net = FANN::neural_net(netFileName);
 		net.create_from_file(netFileName);
 	}
-	else*/
+	else
 	{
 		cout << "Neural network have not been found. Try to train on data from file " << trainingDataFile << endl;
 		train();

@@ -1,3 +1,4 @@
-﻿  AIWonder.cpp
-c:\7wonders\7 wonders\aiwonder.cpp(43): warning C4244: '=' : conversion from 'int' to 'fann_type', possible loss of data
+﻿  GameManager.cpp
+c:\7wonders\7 wonders\gamemanager.cpp(423): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\7wonders\7 wonders\gamemanager.cpp(455): warning C4018: '<' : signed/unsigned mismatch
   7 Wonders.vcxproj -> C:\7Wonders\Debug\7 Wonders.exe
