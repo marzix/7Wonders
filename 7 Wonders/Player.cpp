@@ -4,6 +4,7 @@
 #include "ProductionCard.h"
 #include "ScienceCard.h"
 #include <algorithm>
+#include <sstream>
 
 Player::Player( string _name, char* type )
 : name( _name )
@@ -243,10 +244,54 @@ string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
 	string currentTurn = "";
 	_itoa_s(epoque, buffer, 10);
 	currentTurn += buffer;
+
+	std::ostringstream strs;
+	double cardCode;
+	double cardValue;
+	MilitaryCard * red;
+
 	for (auto card : cards)
 	{
 		if (CheckIfAfordable(card->GetCost()))
-			currentTurn += " " + card->GetCardCode();
+		{
+			cardCode = (double)(atoi(card->GetCardCode().c_str()) / 10.0);
+
+			if (card->GetCardCode() == "10")
+			{
+				/* get value - cost in points */
+				cardValue = 0.0;
+			}
+			else if (card->GetCardCode() == "20")
+			{
+				/* get value - cost in points */
+				cardValue = 0.0;
+			}
+			else if (card->GetCardCode() == "30")
+			{
+				red = dynamic_cast<MilitaryCard*>(card.get());
+				cardValue = (double)(red->GetPoints() / 100.0) /* - cost in points */;
+			}
+			else if (card->GetCardCode() == "40")
+			{
+				/* get value - cost in points */
+				cardValue = 0.0;
+			}
+			else if (card->GetCardCode() == "50")
+			{
+				/* get value - cost in points */
+				cardValue = 0.0;
+			}
+
+			if (cardValue < 0.0)
+				strs << -1;
+			else
+				strs << cardCode + (double)(this->GetTotalPoints() / 100.0) + cardValue;
+
+			currentTurn += " " + strs.str();
+			strs.str("");
+			strs.clear();
+			cardCode = cardValue = 0.0;
+		}
 		else
 			currentTurn += " -1";
 	}
