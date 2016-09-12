@@ -53,11 +53,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Marzena\Documents\Visual Studio 2013\FANN-2.2.0-Source\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>fanndouble.lib;fanndoubled.lib;fannfixed.lib;fannfixedd.lib;fannfloat.lib;fannfloatd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Marzena\Documents\Visual Studio 2013\FANN-2.2.0-Source\src\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIWonder.cpp" />
     <ClCompile Include="ArchitectureCard.cpp" />
     <ClCompile Include="BonusCard.cpp" />
     <ClCompile Include="Card.cpp" />
@@ -94,6 +97,7 @@
     <ClCompile Include="WonderCard.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIWonder.h" />
     <ClInclude Include="ArchitectureCard.h" />
     <ClInclude Include="BonusCard.h" />
     <ClInclude Include="Card.h" />
