@@ -43,6 +43,12 @@ void Player::CollectCard( CardPtr card, Cost costLeft )
             gold -= sc.amount;
     }
     cards.push_back( card );
+
+	if (card->GetCardType() == BROWN || card->GetCardType() == GREY) 
+	{
+		ProductionCard * browngrey = dynamic_cast<ProductionCard*>(card.get());
+		ownedMaterials.push_back(browngrey->GetProducedMaterial());
+	}
 }
 
 void Player::AddGold( int g )
@@ -238,6 +244,11 @@ string Player::SaveTurn( int epoque, vector<CardPtr> cards )
     return currentTurn;
 }
 
+vector<SingleCost> Player::GetOwnedMaterials()
+{
+	return ownedMaterials;
+}
+
 string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
 {
 	char buffer[10];
@@ -249,27 +260,46 @@ string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
 	double cardCode;
 	double cardValue;
 	MilitaryCard * red;
+	ArchitectureCard * blue;
+	ProductionCard * browngrey;
+	double cost = 0.0;
+	int amount = 0;
 
 	for (auto card : cards)
 	{
 		if (CheckIfAfordable(card->GetCost()))
 		{
 			cardCode = (double)(atoi(card->GetCardCode().c_str()) / 10.0);
+			
+			for (SingleCost material : card->GetCost().materials)
+			{
+				amount = material.amount;
+				for (SingleCost owned : this->ownedMaterials)
+				{
+					if (material.material == owned.material) {
+						amount -= owned.amount;
+					}
+				}
+				if (amount < 0)
+					amount = 0;
+				cost += amount * 2;
+			}
+			cost = (double)(cost / 100.0);
 
 			if (card->GetCardCode() == "10")
 			{
-				/* get value - cost in points */
-				cardValue = 0.0;
+				browngrey = dynamic_cast<ProductionCard*>(card.get());
+				cardValue = (double)(browngrey->GetProducedMaterial().amount * 2 / 100.0) - cost;
 			}
 			else if (card->GetCardCode() == "20")
 			{
-				/* get value - cost in points */
-				cardValue = 0.0;
+				browngrey = dynamic_cast<ProductionCard*>(card.get());
+				cardValue = (double)(browngrey->GetProducedMaterial().amount * 2 / 100.0) - cost;
 			}
 			else if (card->GetCardCode() == "30")
 			{
 				red = dynamic_cast<MilitaryCard*>(card.get());
-				cardValue = (double)(red->GetPoints() / 100.0) /* - cost in points */;
+				cardValue = (double)(red->GetPoints() / 100.0) - cost;
 			}
 			else if (card->GetCardCode() == "40")
 			{
@@ -278,9 +308,10 @@ string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
 			}
 			else if (card->GetCardCode() == "50")
 			{
-				/* get value - cost in points */
-				cardValue = 0.0;
+				blue = dynamic_cast<ArchitectureCard*>(card.get());
+				cardValue = (double)(blue->GetPoints() / 100.0) - cost;
 			}
+			cost = 0.0;
 
 			if (cardValue < 0.0)
 				strs << -1;

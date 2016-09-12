@@ -24,10 +24,12 @@ public:
     void SaveTurn( unsigned choice );
     string GetCourseOfGame()const;
 	string GetCurrentTurn(int epoque, vector<CardPtr> cards);
+	vector<SingleCost> GetOwnedMaterials();
 private:
     string name;
     string courseOfGameText;
     vector<CardPtr> cards;
     int gold = 10;
     ePlayerType playerType;
+	vector<SingleCost> ownedMaterials;
 };
