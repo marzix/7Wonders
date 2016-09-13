@@ -6,7 +6,7 @@ MilitaryCard::MilitaryCard( eCardType type, short int epoque, Cost cost, int str
 , strength( stren )
 , freebuild( free )
 {
-    cardCode = "30";
+    cardCode = "3";
     string fb = "\n";
     if( freebuild != EMPTY )
     {

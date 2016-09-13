@@ -5,9 +5,9 @@ ProductionCard::ProductionCard( eCardType cardType, short int epoque, Cost cost,
 : Card( cardType, epoque, cost )
 {
     if( type == BROWN )
-        cardCode = "10";
+        cardCode = "1";
     else
-        cardCode = "20";
+        cardCode = "2";
     producedMaterial.material = _material;
     producedMaterial.amount = amt;
     displayString += "\n|Material:\t\t|\n|\t" + producedMaterial.GetDisplayInfo() + "-------------------------\n";

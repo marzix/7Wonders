@@ -6,7 +6,7 @@ ScienceCard::ScienceCard( eCardType type, short int epoque, Cost cost, eScienceS
 , symbol( smb )
 , freebuild( free )
 {
-    cardCode = "40";
+    cardCode = "4";
     string fb = "\t|\n-------------------------\n";
     string text = GetFreebuildString( freebuild );
     if( text.length() < 8 )

@@ -26,7 +26,7 @@ public:
     void StartGame( char* argv[] );
     vector<CardPtr> DrawCardSet();
     void DrawCard( vector<CardPtr> & currentSet );
-    int InterpretChoice( const string choice );
+    int InterpretChoice( const string choice, unsigned currentSetSize );
     void SellCard( int card, vector<CardPtr> & currentSet );
     bool CollectCard( int card, vector<CardPtr> & currentSet );
 

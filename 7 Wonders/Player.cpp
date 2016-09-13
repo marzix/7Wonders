@@ -4,6 +4,7 @@
 #include "ProductionCard.h"
 #include "ScienceCard.h"
 #include <algorithm>
+#include <sstream>
 
 Player::Player( string _name, char* type )
 : name( _name )
@@ -42,6 +43,12 @@ void Player::CollectCard( CardPtr card, Cost costLeft )
             gold -= sc.amount;
     }
     cards.push_back( card );
+
+	if (card->GetCardType() == BROWN || card->GetCardType() == GREY) 
+	{
+		ProductionCard * browngrey = dynamic_cast<ProductionCard*>(card.get());
+		ownedMaterials.push_back(browngrey->GetProducedMaterial());
+	}
 }
 
 void Player::AddGold( int g )
@@ -151,6 +158,24 @@ void Player::DisplayCards()
     cout << endl;
 }
 
+int Player::GetScienceCardSymbolCount( eScienceSymbol symbol )const
+{
+    int symbolCounter = 0;
+    for( auto & card : cards )
+    {
+        eCardType type = card->GetCardType();
+        if( type == GREEN )
+        {
+            if( ScienceCard* green = dynamic_cast<ScienceCard*>( card.get() ) )
+            {
+                if( green->GetScienceSymbol() == symbol )
+                    symbolCounter++;
+            }
+        }
+    }
+    return symbolCounter;
+}
+
 struct SymbolsCounter
 {
     SymbolsCounter( eScienceSymbol s ) : symbol(s) {};
@@ -162,7 +187,7 @@ struct SymbolsCounter
 int Player::GetTotalPoints()
 {
     //posortuj karty po typie
-    //zielone: liczba kart do kwadratu
+    //zielone: liczba kart o danym symbolu do kwadratu
     //czerwone: si³a militarna = punkty
     //niebieskie: punkty
     //z³oto: 1pkt za ka¿de 3 monety
@@ -237,18 +262,93 @@ string Player::SaveTurn( int epoque, vector<CardPtr> cards )
     return currentTurn;
 }
 
+vector<SingleCost> Player::GetOwnedMaterials()
+{
+	return ownedMaterials;
+}
+
 string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
 {
 	char buffer[10];
 	string currentTurn = "";
 	_itoa_s(epoque, buffer, 10);
 	currentTurn += buffer;
+
+	std::ostringstream strs;
+	double cardCode;
+	double cardValue;
+	MilitaryCard * red;
+	ArchitectureCard * blue;
+	ProductionCard * browngrey;
+    ScienceCard * green;
+	double cost = 0.0;
+	int amount = 0;
+
 	for (auto card : cards)
 	{
-		if (CheckIfAfordable(card->GetCost()))
-			currentTurn += " " + card->GetCardCode();
+        auto cardCost = card->GetCost();
+        cardCode = (double)(atoi(card->GetCardCode().c_str()));
+		if( CheckIfAfordable( cardCost ) )
+		{
+			/*
+			for (SingleCost material : card->GetCost().materials)
+			{
+				amount = material.amount;
+				for (SingleCost owned : this->ownedMaterials)
+				{
+					if (material.material == owned.material) {
+						amount -= owned.amount;
+					}
+				}
+				if (amount < 0)
+					amount = 0;*/
+            if( cardCost.materials.size() && cardCost.materials[0].material == GOLD )
+				cost += cardCost.materials[0].amount / 3;
+
+			if ( cardCode == 1.0 )
+			{
+				browngrey = dynamic_cast<ProductionCard*>(card.get());
+				cardValue = browngrey->GetProducedMaterial().amount * 2 - cost;
+			}
+			else if (cardCode == 2.0)
+			{
+				browngrey = dynamic_cast<ProductionCard*>(card.get());
+				cardValue = browngrey->GetProducedMaterial().amount * 2 - cost;
+			}
+			else if (cardCode == 3.0)
+			{
+				red = dynamic_cast<MilitaryCard*>(card.get());
+				cardValue = red->GetPoints() - cost;
+			}
+			else if (cardCode == 4.0)
+			{
+                cardValue = 0.0;
+                if( green = dynamic_cast<ScienceCard*>( card.get() ) )
+                {
+                    int symbolCount = GetScienceCardSymbolCount( green->GetScienceSymbol() );
+                    cardValue = pow( (symbolCount + 1), 2 ) - pow( symbolCount, 2 ) - cost;
+                }
+			}
+			else if (cardCode == 5.0)
+			{
+				blue = dynamic_cast<ArchitectureCard*>(card.get());
+				cardValue = blue->GetPoints() - cost;
+			}
+			cost = 0.0;
+            
+            //warunek, który nigdy nie wyst¹pi, ale dla pewnoœci mo¿e zostaæ
+			if (cardValue < 0.0)
+				strs << -1;
+			else
+				strs << cardCode + (double)( (this->GetTotalPoints() + cardValue) / 100.0 );
+		}
 		else
-			currentTurn += " -1";
+            strs << cardCode + (double)( (this->GetTotalPoints() + CARD_PRICE / 3.0) / 100.0 );
+
+        currentTurn += " " + strs.str();
+        strs.str("");
+        strs.clear();
+        cardCode = cardValue = 0.0;
 	}
 	for (int i = cards.size(); i < 5; i++)
 	{

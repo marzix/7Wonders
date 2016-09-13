@@ -420,7 +420,7 @@ void GameManager::StartGame( char* argv[] )
     if( !argv || !*argv )
         return;
 
-    srand( time( NULL ) );
+    srand( (unsigned)time( NULL ) );
 
     std::random_shuffle( firstEpoqueCards.begin(), firstEpoqueCards.end() );
     std::random_shuffle( secondEpoqueCards.begin(), secondEpoqueCards.end() );
@@ -451,15 +451,15 @@ void GameManager::StartGame( char* argv[] )
             //choice = ReadAnswear();
             //cout << choice;
 			string currentTurn = activePlayer->GetCurrentTurn(epoque, currentSet);
-			char  * cardsCodes = (char*)malloc(sizeof(char)*currentTurn.size());
-			for (int i = 0; i < currentTurn.size(); i++)
+			/*char  * cardsCodes = (char*)malloc(sizeof(char)*currentTurn.size());
+			for (unsigned int i = 0; i < currentTurn.size(); i++)
 			{
 				cardsCodes[i] = currentTurn[i];
-			}
-			choice = std::to_string(AIWonder::getSingleton().takeCard(cardsCodes));
+			}*/
+			choice = std::to_string(AIWonder::getSingleton().takeCard( (char*)currentTurn.c_str()) );
 			cout << choice;
         }
-        int result = InterpretChoice( choice );
+        int result = InterpretChoice( choice, currentSet.size() );
         if( result == 0 )
             return;
         else if( result < 0 )
@@ -547,10 +547,16 @@ void GameManager::DisplayData( vector<CardPtr> cards )
     }
 }
 
-int GameManager::InterpretChoice( const string choice )
+int GameManager::InterpretChoice( const string choice, unsigned currentSetSize )
 {
     if( choice >= "1" && choice <= "5" )
-        return atoi( choice.c_str() );
+    {
+        unsigned result = atoi( choice.c_str() );
+        if( result <= currentSetSize )
+            return result;
+        else
+            return 1;
+    }
     if( choice[0] == 27 )
         return 0;
     else

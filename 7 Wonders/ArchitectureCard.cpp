@@ -6,7 +6,7 @@ ArchitectureCard::ArchitectureCard( eCardType type, short int epoque, Cost cost,
 , points( p )
 , freebuild( free )
 {
-    cardCode = "50";
+    cardCode = "5";
     displayString += "\n|Points: " + std::to_string( points ) + "\t\t|\n-------------------------\n";
 }
 
