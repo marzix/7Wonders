@@ -15,7 +15,7 @@ using std::noshowpos;
 #define netFileName "AIWonder.net"
 #define trainingDataFile "AIWonder.data"
 
-#pragma warning(disable: 4996)
+
 
 AIWonder AIWonder::AI;
 FANN::neural_net AIWonder::net;

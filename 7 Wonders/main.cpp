@@ -12,7 +12,7 @@ typ gracza:
 
 int main( int argc, char* argv[] )
 {
-    char* arg[3] = { "", "a", "h" };
+    char* arg[3] = { "", "h", "h" };
 	bool ifAI = false;
     if( argc == 3 )
     {

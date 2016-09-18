@@ -434,28 +434,24 @@ void GameManager::StartGame( char* argv[] )
     vector<CardPtr> currentSet = DrawCardSet();
     string choice;
 
-    while( run )
-    {
-        if( currentSet.empty() )
-        {
-            epoque++;
-            if( epoque > 3 )
-                break;
-            currentSet = DrawCardSet();
-        }
-        DisplayData( currentSet );
-        if( activePlayer->GetPlayerType() == HUMAN )
-            cin >> choice;
+	while (run)
+	{
+		if (currentSet.empty())
+		{
+			epoque++;
+			if (epoque > 3)
+				break;
+			currentSet = DrawCardSet();
+		}
+		DisplayData(currentSet);
+		if (activePlayer->GetPlayerType() == HUMAN)
+		{
+			cout << activePlayer->GetCurrentTurn(epoque, currentSet);
+			cin >> choice;
+		}
         else
         {
-            //choice = ReadAnswear();
-            //cout << choice;
 			string currentTurn = activePlayer->GetCurrentTurn(epoque, currentSet);
-			/*char  * cardsCodes = (char*)malloc(sizeof(char)*currentTurn.size());
-			for (unsigned int i = 0; i < currentTurn.size(); i++)
-			{
-				cardsCodes[i] = currentTurn[i];
-			}*/
 			choice = std::to_string(AIWonder::getSingleton().takeCard( (char*)currentTurn.c_str()) );
 			cout << choice;
         }
