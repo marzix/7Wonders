@@ -1,5 +1,0 @@
-﻿  main.cpp
-  GameManager.cpp
-GameManager.cpp(458): warning C4267: 'argument' : conversion from 'size_t' to 'unsigned int', possible loss of data
-  Generating Code...
-  7 Wonders.vcxproj -> C:\7Wonders\x64\Debug\7 Wonders.exe
