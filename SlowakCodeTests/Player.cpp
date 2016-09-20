@@ -270,7 +270,7 @@ vector<SingleCost> Player::GetOwnedMaterials()
 string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
 {
 	string currentTurn = "";
-	currentTurn += to_string((double)epoque);
+	currentTurn += to_string(epoque);
 
 	std::ostringstream strs;
 	double cardCode;
@@ -350,7 +350,7 @@ string Player::GetCurrentTurn(int epoque, vector<CardPtr> cards)
 	}
 	for (int i = cards.size(); i < 5; i++)
 	{
-		currentTurn += " 0.0";
+		currentTurn += " 0";
 	}
 	/*_itoa_s( GetTotalPoints(), buffer, 10 );
 	currentTurn += " ";
@@ -364,9 +364,9 @@ void Player::SaveTurn( unsigned choice )
     for( unsigned i = 0; i < 5; i++ )
     {
         if( i == choice )
-            courseOfGameText += "1.0 ";
+            courseOfGameText += "1 ";
         else
-            courseOfGameText += "0.0 ";
+            courseOfGameText += "0 ";
     }
     courseOfGameText += "\n\n";
 }

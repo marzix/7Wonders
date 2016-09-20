@@ -67,13 +67,14 @@ void AIWonder::train()
 		system("pause");
 		exit(0);
 	}
-	const float learning_rate = 0.7f;
+
+	const float learning_rate = 0.005f;
 	const unsigned int num_layers = 3;
 	const unsigned int num_input = 6;
-	const unsigned int num_hidden = 6;
+	const unsigned int num_hidden = 8;
 	const unsigned int num_output = 5;
 	const float desired_error = 0.0001f;
-	const unsigned int max_iterations = 300000;
+	const unsigned int max_iterations = 500000;
 	const unsigned int iterations_between_reports = 100000;
 
 	cout << endl << "Creating network." << endl;
@@ -85,14 +86,14 @@ void AIWonder::train()
 
 	net.set_learning_rate(learning_rate);
 
-	net.set_activation_steepness_hidden(0.8);
-	net.set_activation_steepness_output(0.8);
+	net.set_activation_steepness_hidden(0.01);
+	net.set_activation_steepness_output(0.01);
 
 	net.set_activation_function_hidden(FANN::SIGMOID_SYMMETRIC_STEPWISE);
 	net.set_activation_function_output(FANN::SIGMOID_SYMMETRIC_STEPWISE);
 
 	// Set additional properties such as the training algorithm
-	net.set_training_algorithm(FANN::TRAIN_QUICKPROP);
+	net.set_training_algorithm(FANN::TRAIN_RPROP);
 
 	// Output network type and parameters
 

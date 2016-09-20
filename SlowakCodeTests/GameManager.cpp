@@ -454,6 +454,7 @@ void GameManager::StartGame( char* argv[] )
 			string currentTurn = activePlayer->GetCurrentTurn(epoque, currentSet);
 			choice = std::to_string(AIWonder::getSingleton().takeCard( (char*)currentTurn.c_str()) );
 			cout << choice;
+			system("pause");
         }
         int result = InterpretChoice( choice, currentSet.size() );
         if( result == 0 )
