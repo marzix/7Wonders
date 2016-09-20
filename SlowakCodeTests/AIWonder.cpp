@@ -86,8 +86,8 @@ void AIWonder::train()
 
 	net.set_learning_rate(learning_rate);
 
-	net.set_activation_steepness_hidden(0.01);
-	net.set_activation_steepness_output(0.01);
+	net.set_activation_steepness_hidden(0.4);
+	net.set_activation_steepness_output(0.4);
 
 	net.set_activation_function_hidden(FANN::SIGMOID_SYMMETRIC_STEPWISE);
 	net.set_activation_function_output(FANN::SIGMOID_SYMMETRIC_STEPWISE);
